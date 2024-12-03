@@ -23,7 +23,7 @@ public class Rectangle {
 
     public void display() {
         canvas.fill(color);
-        canvas.rect
+        canvas.rect(50,50,200,100);
        
     }
 }
