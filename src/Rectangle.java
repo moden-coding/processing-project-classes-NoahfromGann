@@ -6,24 +6,25 @@ public class Rectangle {
     private int size;
     private PApplet canvas;
     private int color;
-    private int rectWidth;
-    private int rectHeight;
+    // private int rectWidth;
+    // private int rectHeight;
 
     public Rectangle(int xPos, int yPos, PApplet S ) {
         x = xPos;
         y = yPos;
-        rectWidth = 300;
-        rectHeight = 300;
-        size = 100;
+        // rectWidth = 300;
+        // rectHeight = 300;
+        size = 1000;
         canvas = S;
-        color = canvas.color(255,255,0, 128);
-        canvas.fill (color);
+        // color = canvas.color(255,255,0, 128);
+        color = canvas.color(300,200,0);
+        // canvas.fill (color);
 
     }
 
     public void display() {
         canvas.fill(color);
-        canvas.rect(50,50,200,100);
+        canvas.rect(x,y,size/2,size);
        
     }
 }
