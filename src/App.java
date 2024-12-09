@@ -1,20 +1,35 @@
+import java.util.ArrayList;
+
 import processing.core.*;
 
 public class App extends PApplet {
-    Square square1;
-    Square square2;
-    Rectangle rectangle;
+    // int squareX = random(0,800);
+    // int squareY = random(0,800);
+    
+    ArrayList<Square> squares = new ArrayList<Square>();
+    // Rectangle rectangle;
+
 
     public static void main(String[] args) {
         PApplet.main("App");
     }
 
     public void setup() {
-        square1 = new Square(50, 50, this);
-        square2 = new Square(100,100, this);
-        rectangle = new Rectangle(200, 200, this);
-
         background(0, 0, 0);
+        // rectangle = new Rectangle(400, 400, this);
+
+        int numSquares = 10;
+
+        squares = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+
+            //ask mr moden about x and y and how to make a grid
+            // int x = 100 + (i * 20);
+            // int y = 200;
+            // squares.add(new Square(x, y, this));
+        }
+
+
     }
 
     public void settings() {
@@ -22,19 +37,37 @@ public class App extends PApplet {
     }
 
     public void draw() {
-        square1.display();
-        square2.display();
-
-        rectangle.display();
+        if (frameCount%180==0) {
+            squareMaker();
+            
+        }
+        for (Square square : squares) {
+            square.display();
+        }
+        // rectMode(CENTER);
+        // rectangle.display();
+        
 
     }
 
     public void squareMaker() {
-
-        // for(int i = 0; i < 160; i+= 2) {
-        // Square squares = new Square(50* (i % 20) + 20 ,100 * (i/20) + 20, this );
-        // squares.display();
-        // }
+        
+        squares.add(new Square(random(0,800),random(0,800), this));
+        
+     
 
     }
+    public void mousePressed() {
+        for (int i = squares.size() - 1; i >= 0; i--) {
+            Square s = squares.get(i);
+            if (squares.get(i).goneGame(mouseX, mouseY)) {
+                squares.remove(i);
+                break; 
+            }
+        }
+    }
+    
+    
 }
+
+

@@ -1,36 +1,36 @@
 import processing.core.PApplet;
 
 public class Square {
-    private int x;
-    private int y;
-    private int size;
-    private PApplet canvas;
-    private int color;
+    private  float x;
+    private  float y;
+    private  int size;
+    private  PApplet canvas;
+    private  int color;
     // private int squareWidth;
     // private int squareHeight;
 
-    
-
-    public Square(int xPos, int yPos, PApplet S ) {
+    public Square(float xPos, float yPos, PApplet S) {
         x = xPos;
         y = yPos;
-        // size = 50;
-        // squareWidth = 50;
-        // squareHeight = 50;
         size = 50;
         canvas = S;
-        color = canvas.color(255,255,0);
-        // color = canvas.color(211,211,211, 5);
 
-        canvas.fill (color);
+        color = S.color(S.random(0, 255), S.random(0, 255), S.random(0, 255)); // color = canvas.color(211,211,211, 5);
+
+        canvas.fill(color);
 
     }
 
     public void display() {
         canvas.fill(color);
 
-        canvas.rect(x,y,size,size);
-       
+        canvas.rect(x, y, size, size);
+
+    }
+
+    public boolean goneGame(int mouseX, int mouseY) {
+    return (mouseX >= x && mouseX <= x + size && mouseY >= y && mouseY <= y + size);
+
     }
 
 }
