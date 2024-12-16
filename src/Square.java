@@ -32,6 +32,16 @@ public class Square {
         return (mouseX >= x && mouseX <= x + size && mouseY >= y && mouseY <= y + size);
 
     }
+
+    public int getX() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getX'");
+    }
+
+    public int getSize() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getSize'");
+    }
     
 
 }
