@@ -13,13 +13,13 @@ public class Rectangle{
 
 
 
-    public Rectangle(float xPos, float yPos, float width, float height, PApplet S) {
+    public Rectangle(float xPos, float yPos, float w, float h, PApplet S) {
         x = xPos;
         y = yPos;
-        width = width;
-        height = height;
+        width = w;
+        height = h;
         canvas = S;
-        color = canvas.color(245, 66, 66);
+        color = canvas.color(0, 150, 150);
 
     }
 
