@@ -9,35 +9,43 @@ import processing.core.*;
 
 public class App extends PApplet {
 
+    //scor and the game starting and creates an array for squares
     int stage = 0;
     int score = 0;
     int highScore = 0;
     double gameStart;
     int gameMode = 0;
     ArrayList<Square> squares = new ArrayList<Square>();
-    ArrayList<ReactionGame> circles = new ArrayList<ReactionGame>();
+    ArrayList<Circle> circles = new ArrayList<Circle>();
     Rectangle gameField;
-    float nextCircleTime;
-    float circleX, circleY;
+    Rectangle easyButton;
+    Rectangle hardButton;
+    int lives = 3;
+    boolean hardMode = false;
 
     public static void main(String[] args) {
         PApplet.main("App");
     }
 
+    // game window size
+
     public void settings() {
         size(800, 800);
+
     }
+
 
     public void setup() {
         readHighScore();
         gameStart = millis();
         background(0);
-        squares = new ArrayList<>();
         gameField = new Rectangle((width - 650) / 2, (height - 650) / 2, 650, 650, this);
-        circles = new ArrayList<>();
+        easyButton = new Rectangle(200, 400, 150, 75, this);
+        hardButton = new Rectangle(450, 400, 150, 75, this);
 
     }
 
+    // game screens
     public void draw() {
         background(0);
 
@@ -46,9 +54,7 @@ public class App extends PApplet {
 
         if (stage == 0) {
             startScreen();
-        } else if (stage == 1 && gameMode == 2) {
-            reactionGame();
-        } else if (stage == 1 && gameMode == 1) {
+        } else if (stage == 1) {
             mainScreen();
         } else if (stage == 2) {
             saveHighScore();
@@ -57,6 +63,15 @@ public class App extends PApplet {
         }
     }
 
+    public void startGame() {
+        squares.clear();
+        circles.clear();
+        score = 0;
+        lives = 3;
+        gameStart = millis();
+    }
+
+
     public void startScreen() {
         background(0);
         fill(255);
@@ -64,34 +79,70 @@ public class App extends PApplet {
         textAlign(CENTER, CENTER);
         text("Welcome to the Game Hub!", width / 2, height / 2 - 100);
         textSize(20);
-        text("Click mouse to start the Square Game", width / 2, height / 2);
-        text("Press SPACE to start the Reaction Game", width / 2, height / 2 + 50);
+
+        easyButton.display();
+        hardButton.display();
+
+        fill(255);
+        textSize(30);
+        textAlign(CENTER, CENTER);
+        text("Easy", 275, 440);
+        text("Hard", 525, 440);
 
     }
+
 
     public void mainScreen() {
         gameField.display();
 
         double timer = (millis() - gameStart) / 1000.0;
 
-        if (timer < 10.0) {
+        if (timer < 100.0) {
             background(0);
             rectangle();
 
-            for (Square square : squares) {
-                square.display();
+            for (int i = squares.size() - 1; i >= 0; i--) {
+                Square square = squares.get(i);
+                if (square.shouldDisappear()) {
+                    squares.remove(i);
+                } else {
+                    square.display();
+                }
             }
+
+            if(hardMode){
+                for(int i = circles.size() - 1; i >= 0; i--){
+                    Circle circle = circles.get(i);     
+                    circle.display();
+
+                    if(circle.shouldDisappear()){
+                        circles.remove(i);
+                    }
+                }
+
+            }
+
 
             fill(255);
             textSize(20);
             text("" + (int) (timer * 10.0) / 10.0, width - 50, 50);
             text("Score: " + score, 50, 50);
+
+            if (hardMode) {
+                textSize(30);
+                textAlign(CENTER, CENTER);
+                text("Lives: " + lives, width / 2, 50);
+            }
+
         } else {
             stage = 2;
         }
 
         if (frameCount % 90 == 0) {
             squareMaker();
+            if (hardMode && frameCount % 90 == 0) {  
+                circleMaker();
+            }
         }
     }
 
@@ -113,56 +164,166 @@ public class App extends PApplet {
     }
 
     public void squareMaker() {
-        squares.add(new Square(random(50, 650), random(65, 650), this));
 
+        float fieldX = (width - 625) / 2;
+        float fieldY = (height - 625) / 2;
+        float fieldWidth = 620;
+        float fieldHeight = 620;
+
+        float randomX = random(fieldX + 25, fieldX + fieldWidth - 25);
+        float randomY = random(fieldY + 25, fieldY + fieldHeight - 25);
+
+        Square newSquare = new Square(randomX, randomY, this);
+
+        float chance = random(1);
+        if (hardMode) {
+
+            //black squares
+            if (chance < 0.3f) {
+                newSquare.howlikely(0.3f);
+
+                //shrinking square
+            } else if (chance < 0.4f) {
+                    System.out.println("test");
+                newSquare.makeShrinkingSquare();
+
+
+            } else if (chance < 0.6f) {
+                System.out.println("test1");
+                newSquare.makeGoldenSquare();
+            }
+        }
+        squares.add(newSquare);
     }
 
+
+    public void circleMaker() {
+        float fieldX = (width - 625) / 2;
+        float fieldWidth = 620;
+        
+        float randomX = random(fieldX + 25, fieldX + fieldWidth - 25);
+        float startY = (height - 625) / 2;
+
+        Circle newCircle = new Circle(randomX, startY, this);
+        circles.add(newCircle);
+    }
+
+
+
+
+
+
+    public void checkSquares() {
+        for (int i = 0; i < squares.size(); i++) {
+            Square currentSquare = squares.get(i);
+
+            if (currentSquare.goneGame(mouseX, mouseY)) {
+                if (hardMode) {
+                    if (currentSquare.isBlack()) {
+
+                        if (lives > 1) {
+                            lives = lives - 1;
+
+                        } else {
+                            lives = 0;
+                        }
+                        if (score > 2) {
+                            score = score - 2;
+                        } else {
+                            score = 0;
+                        }
+                        if (lives <= 0) {
+                            stage = 3;
+                        }
+                    } else {
+                        score = score + currentSquare.getPoints();
+                        // System.out.println("test");
+
+                    }
+                    squares.remove(i);
+
+                } 
+                break;
+            }
+        }
+    }
+
+     
+
+
+
+
+
+
+
+
+
+
     public void mousePressed() {
-        if (stage == 0 && gameMode == 0) {
-            gameMode = 1;
-            stage = 1;
+        if (stage == 0) {
+            if (mouseX >= 200 && mouseX <= 350 && mouseY >= 400 && mouseY <= 475) {
+                gameMode = 1;
+                hardMode = false;
+                stage = 1;
+                startGame();
+            } else if (mouseX >= 450 && mouseX <= 600 && mouseY >= 400 && mouseY <= 475) {
+                gameMode = 2;
+                hardMode = true;
+                stage = 1;
+                startGame();
+            }
         } else if (stage == 3) {
             resetGame();
         } else {
-            if (gameMode == 1) {
-
-                for (int i = squares.size() - 1; i >= 0; i--) {
-                    if (squares.get(i).goneGame(mouseX, mouseY)) {
-                        squares.remove(i);
-                        score++;
-                        break;
-                    }
-                }
-            }
+            checkSquares();
         }
     }
 
     public void keyPressed() {
         if (stage == 0 && key == ' ') {
-            gameMode = 2;
             stage = 1;
             gameStart = millis();
             score = 0;
         }
     }
 
+
+
+
+
     public void resetGame() {
         stage = 0;
         score = 0;
         squares.clear();
+        circles.clear();
         gameStart = millis();
         gameMode = 0;
+        hardMode = false;
     }
+
+
+
+
 
     public void score() {
         score++;
     }
 
+
+
+
+
+
+
+
+
+
+
+
     public void readHighScore() {
         try (Scanner scanner = new Scanner(Paths.get("Highscore.txt"))) {
             if (scanner.hasNextLine()) {
                 highScore = Integer.valueOf(scanner.nextLine());
-                // System.out.println(highScore);
             }
         } catch (IOException e) {
             System.out.println("Error reading score file: " + e.getMessage());
@@ -186,59 +347,21 @@ public class App extends PApplet {
             System.out.println("High score successfully saved to " + filePath);
         } catch (FileNotFoundException e) {
             System.out.println("FileNotFoundException: Unable to create or write to file at " + filePath);
-        } catch (IOException e) {
-            System.out.println("IOException: Problem encountered while writing to file " + filePath);
-            e.printStackTrace();
         }
+
         stage = 3;
     }
 
+}
+
+
+
+
+
+
+
+
+
     
 
-    public void reactionGameScreen() {
-        if (gameMode == 1) {
-            reactionGame();
-        }
-        // background(0);
-        // fill(255);
-        // textAlign(CENTER, CENTER);
-        // textSize(30);
-        // text("Reaction Game!", width / 2, height / 2 - 50);
-        // text("", width / 2, height / 2);
 
-        double timer = (millis() - gameStart) / 1000.0;
-        text("" + (int) (timer * 10.0) / 10.0, width - 50, 50);
-
-        if (timer > 5.0) {
-            stage = 2;
-        }
-
-    }
-
-    public void reactionGame() {
-        background(0);
-        fill(255);
-        textAlign(CENTER, CENTER);
-        textSize(30);
-        text("Reaction Game!", width / 2, 50);
-
-        for (int i = 0; i < 4; i++) {
-            circles.add(new ReactionGame(this));
-            ReactionGame c = circles.get(i);
-            c.display();
-        }
-        // System.out.println("working");
-
-        nextCircleTime = millis() + (int) random(3000, 10000);
-
-        if (millis() > nextCircleTime) {
-        circleX = random(width);
-        circleY = random(height);
-        fill(255, 0, 0);
-        ellipse(circleX, circleY, 50, 50);
-
-
-        }
-    }
-
-}
