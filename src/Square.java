@@ -5,25 +5,29 @@ public class Square {
 
     private float x;
     private float y;
-    private int size;
+
+    private float size;
     private PApplet canvas;
     private int color;
     private boolean isShrinking = false;
     private int points = 1;
     private float createTime;
+
+
     private boolean isGolden = false;
     private boolean isBlack = false;
 
 
-    public  Square(float xPos, float yPos, PApplet S) {
+    public Square(float xPos, float yPos, PApplet S) {
         x = xPos;
         y = yPos;
         size = 50;
-        canvas = S;
+        // size1 = 50.0;
 
+        canvas = S;
         color = S.color(S.random(0, 255), S.random(0, 255), S.random(0, 255));
-        canvas.fill(color);
-        System.out.println("test3");
+        S.fill(color);
+        
         createTime = S.millis();
 
     }
@@ -33,31 +37,44 @@ public class Square {
 
     public void display() {
         canvas.fill(color);
-
         canvas.rect(x, y, size, size);
 
+
+
+
+
+
         if (isShrinking && size > 15) {
-            size -= 0.5;
+            size = size - 0.5f;
         }
 
     }
+
+
+
 
 
     public boolean shouldDisappear() {
         float currentTime = canvas.millis();
         float lifetime = (currentTime - createTime) / 1000.0f;
 
-        if (isShrinking && lifetime > 2) {
+        if (isShrinking && lifetime > 1) {
             return true;
         }
-        if (isGolden && lifetime > 2.2) {
+        if (isGolden && lifetime > 2) {
             return true;
 
-        }if (isBlack && lifetime > 2) {  
+        }if (isBlack && lifetime > 3) {  
             return true;
         }
         return false;
     }
+
+
+
+
+
+
 
 
 
@@ -74,8 +91,6 @@ public class Square {
     }
 
 
- 
-
 
 
     public void makeBlackSquare() {
@@ -88,24 +103,21 @@ public class Square {
     }
 
 
-
-
-
-
   
     public void makeGoldenSquare() {
         color = canvas.color(255, 215, 0);
         points = 3;
         isGolden = true;
     }
+
     public void makeShrinkingSquare() {
         color = canvas.color(147, 112, 219);
         points = 10;
         isShrinking = true;
 
-        
-
     }
+
+
 
     public boolean isBlack() {
         return isBlack;

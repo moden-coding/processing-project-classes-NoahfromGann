@@ -7,7 +7,7 @@ public class Circle {
     private float size;
     private PApplet canvas;
     private int color;
-    private int points;
+    // private int points;
     private float createTime;
 
     public Circle(float xPos, float yPos, PApplet S) {
@@ -16,7 +16,7 @@ public class Circle {
         size = 50;
         canvas = S;
         color = S.color(0, 255, 128);
-        points = -2;
+        // points = -2;
 
         createTime = S.millis();
 
@@ -29,7 +29,7 @@ public class Circle {
         canvas.circle(x, y, size);
     }
 
-    
+
 
     public boolean shouldDisappear() {
         float currentTime = canvas.millis();  

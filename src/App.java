@@ -1,30 +1,62 @@
+//React Attack
+//Rules: 
+// Easy Game: 
+// 1. You have 15 seconds to click as many squares as possible
+// 2. Each square you click is one point
+// 3. When you click a square it disappears
+// 4. Good Luck!
+
+//
+
+
+
+//All of these are used in saving my score and highscore
+
+
+
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+
 import java.util.Scanner;
+
+
+//From Mr. Moden (what does it do?)
+import java.util.ArrayList;
 
 import processing.core.*;
 
+//From Mr. Moden (what does it do?)
+//PApplet is an app that makes it easy to draw shapes make them move and use the mouse
 public class App extends PApplet {
 
+
+
+  
     //scor and the game starting and creates an array for squares
-    int stage = 0;
-    int score = 0;
+    double startTimer = 0.0; 
+    int stage = 0; //Stage 0 is the startScreen with instructions: Stage 1 is mainScreen(where you play the game ) : Stage 2 endScreen: Stage 3 is endScreen  
+    int lives = 3;
+    int score = 0; 
     int highScore = 0;
-    double gameStart;
-    int gameMode = 0;
+
+    int gameMode = 1; // Game mode easy = 1 and Game Mode Hard = 2 
+    
+    
     ArrayList<Square> squares = new ArrayList<Square>();
     ArrayList<Circle> circles = new ArrayList<Circle>();
+
     Rectangle gameField;
     Rectangle easyButton;
     Rectangle hardButton;
-    int lives = 3;
     boolean hardMode = false;
+    
 
     public static void main(String[] args) {
         PApplet.main("App");
+        
     }
 
     // game window size
@@ -32,12 +64,23 @@ public class App extends PApplet {
     public void settings() {
         size(800, 800);
 
+
     }
 
 
     public void setup() {
         readHighScore();
-        gameStart = millis();
+      
+
+
+
+        // startTimer = millis();
+        // System.out.println(millis());
+        // System.out.println("millis = " + millis());
+
+
+
+
         background(0);
         gameField = new Rectangle((width - 650) / 2, (height - 650) / 2, 650, 650, this);
         easyButton = new Rectangle(200, 400, 150, 75, this);
@@ -49,8 +92,6 @@ public class App extends PApplet {
     public void draw() {
         background(0);
 
-        fill(255);
-        textSize(50);
 
         if (stage == 0) {
             startScreen();
@@ -68,7 +109,7 @@ public class App extends PApplet {
         circles.clear();
         score = 0;
         lives = 3;
-        gameStart = millis();
+        startTimer = millis();
     }
 
 
@@ -95,13 +136,15 @@ public class App extends PApplet {
     public void mainScreen() {
         gameField.display();
 
-        double timer = (millis() - gameStart) / 1000.0;
+        double timer = (millis() - startTimer) / 1000.0;
 
-        if (timer < 100.0) {
+        if (timer < 150.0) {
+            // System.out.println("timer =" + timer);
             background(0);
             rectangle();
 
-            for (int i = squares.size() - 1; i >= 0; i--) {
+                //i is a number that you go over we are getting square zero to square size (i) = num square in the array of squares called squares 
+            for (int i = 0; i < squares.size() ; i++) {
                 Square square = squares.get(i);
                 if (square.shouldDisappear()) {
                     squares.remove(i);
@@ -111,7 +154,8 @@ public class App extends PApplet {
             }
 
             if(hardMode){
-                for(int i = circles.size() - 1; i >= 0; i--){
+                //.size says how many things are in your array of weird things 
+                for(int i = 0; i < circles.size() ; i++){
                     Circle circle = circles.get(i);     
                     circle.display();
 
@@ -146,6 +190,17 @@ public class App extends PApplet {
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
     public void endScreen() {
         background(255);
         fill(0);
@@ -157,11 +212,18 @@ public class App extends PApplet {
         text("Click to restart", width / 2, height / 2 + 100);
     }
 
+
+
     public void rectangle() {
         if (stage == 1) {
             gameField.display();
         }
     }
+
+
+
+
+
 
     public void squareMaker() {
 
@@ -198,9 +260,11 @@ public class App extends PApplet {
 
 
     public void circleMaker() {
+        //where the circle can go in the rectangle 
         float fieldX = (width - 625) / 2;
         float fieldWidth = 620;
         
+        //
         float randomX = random(fieldX + 25, fieldX + fieldWidth - 25);
         float startY = (height - 625) / 2;
 
@@ -282,7 +346,7 @@ public class App extends PApplet {
     public void keyPressed() {
         if (stage == 0 && key == ' ') {
             stage = 1;
-            gameStart = millis();
+            startTimer = millis();
             score = 0;
         }
     }
@@ -296,7 +360,7 @@ public class App extends PApplet {
         score = 0;
         squares.clear();
         circles.clear();
-        gameStart = millis();
+        startTimer = millis();
         gameMode = 0;
         hardMode = false;
     }
@@ -308,6 +372,8 @@ public class App extends PApplet {
     public void score() {
         score++;
     }
+
+
 
 
 
