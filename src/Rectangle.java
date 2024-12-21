@@ -1,18 +1,18 @@
 import processing.core.PApplet;
 
-public class Rectangle{
-  
-    private  float x;
-    private  float y;
-    private  PApplet canvas;
-    private  int color;
+//rectangle class
+//gives a large teal rectangle in the middle of my game
+//teal rectangle is playing board where squares can go
+public class Rectangle {
+
+    private float x;
+    private float y;
+    private PApplet canvas;
+    private int color;
     private float width;
     private float height;
 
-  
-
-
-
+    // makes the rectangle position, size and color
     public Rectangle(float xPos, float yPos, float w, float h, PApplet S) {
         x = xPos;
         y = yPos;
@@ -23,10 +23,11 @@ public class Rectangle{
 
     }
 
+    // displays square
     public void display() {
-        
+
         canvas.fill(color);
-        canvas.strokeWeight(4); 
+        canvas.strokeWeight(4);
         canvas.rect(x, y, width, height);
 
     }

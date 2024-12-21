@@ -14,22 +14,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
-
 import java.util.Scanner;
-
-//From Mr. Moden (what does it do?)
 import java.util.ArrayList;
 
 import processing.core.*;
 
-//From Mr. Moden (what does it do?)
 //PApplet is an app that makes it easy to draw shapes make them move and use the mouse
 public class App extends PApplet {
 
-    // scor and the game starting and creates an array for squares
+    // score and the game starting and creates an array for squares
     double startTimer = 0.0;
-    int stage = 0; // Stage 0 is the startScreen with instructions: Stage 1 is mainScreen(where you
-                   // play the game ) : Stage 2 endScreen: Stage 3 is endScreen
+    int stage = 0; // Stage 0 is the startScreen : Stage 1 is instructions : Stage 2 is mainScreen
+                   // : Stage 3 is saveHighScore : Stage 4 is endScreen:: my code just commenting
+                   // on it
     int lives = 3;
     int score = 0;
     int highScore = 0;
@@ -56,12 +53,9 @@ public class App extends PApplet {
 
     }
 
+    // Prepepares the game
     public void setup() {
         readHighScore();
-
-        // startTimer = millis();
-        // System.out.println(millis());
-        // System.out.println("millis = " + millis());
 
         background(0);
         gameField = new Rectangle((width - 650) / 2, (height - 650) / 2, 650, 650, this);
@@ -70,21 +64,63 @@ public class App extends PApplet {
 
     }
 
-    // game screens
+    // gGme screens and goes over and over to show the different game screens
     public void draw() {
         background(0);
 
         if (stage == 0) {
             startScreen();
         } else if (stage == 1) {
-            mainScreen();
+            instructionsScreen();
         } else if (stage == 2) {
-            saveHighScore();
+            mainScreen();
         } else if (stage == 3) {
+            saveHighScore();
+        } else if (stage == 4) {
             endScreen();
         }
     }
 
+    // instructions of the Hard Mode and Easy Mode and where they are place
+    public void instructionsScreen() {
+        background(0);
+        fill(255);
+        textAlign(CENTER, CENTER);
+
+        textSize(40);
+        if (hardMode == false) {
+            fill(0, 191, 255); //blue
+            text("Welcome to Easy Mode", width / 2, height / 2 - 220);
+            textSize(30);
+            fill(255, 20, 147); //pink
+            text("In this game the goal is to click", width / 2, height / 2 - 140);
+            text("as many squares as possible in 15 seconds", width / 2, height / 2 - 100);
+            text("Each square is worth one point", width / 2, height / 2 - 60);
+            text("Squares will disappear when clicked", width / 2, height / 2 - 20);
+            fill(255, 164, 27);  // Bright orange
+            text("Good Luck!", width / 2, height / 2 + 40);
+
+        } else {
+            fill(0, 191, 255); //blue
+            text("Welcome to Hard Mode!", width / 2, height / 2 - 250);
+
+            textSize(30);
+            fill(255, 20, 147); //pink
+
+            text("In this game you need to be careful!", width / 2, height / 2 - 140);
+            text("Black squares will subtract points and lives", width / 2, height / 2 - 100);
+            text("Golden squares will give you bonus points", width / 2, height / 2 - 60);
+            text("Falling circles must be caught for 3 points or you lose a life", width / 2, height / 2 - 20);
+            fill(255, 215, 0);
+            text("Good Luck!", width / 2, height / 2 + 40);
+
+        }
+        fill(255, 215, 0);
+        textSize(25);
+        text("Press SPACE to start", width / 2, height / 2 + 120);
+    }
+
+    // Resets everything when new game
     public void startGame() {
         squares.clear();
         circles.clear();
@@ -93,6 +129,7 @@ public class App extends PApplet {
         startTimer = millis();
     }
 
+    // Shows the welcome screen with easy and hard buttons
     public void startScreen() {
         background(0);
         fill(255);
@@ -112,13 +149,15 @@ public class App extends PApplet {
 
     }
 
+    // This is where everything in my game is actually happening like my circles,
+    // squares and timer
+
     public void mainScreen() {
         gameField.display();
 
         double timer = (millis() - startTimer) / 1000.0;
 
-        if (timer < 30.0) {
-            // System.out.println("timer =" + timer);
+        if (timer < 15.0) {
             background(0);
             rectangle();
 
@@ -134,10 +173,17 @@ public class App extends PApplet {
             }
 
             if (hardMode) {
-                // .size says how many things are in your array of weird things
+                // size says how many things are in your array of weird things
                 for (int i = 0; i < circles.size(); i++) {
                     Circle circle = circles.get(i);
                     circle.display();
+                    float yPos = circle.loseLives();
+
+                    if (yPos >= 800) {
+                        circleLives(yPos);
+                        circles.remove(i);
+
+                    }
 
                     if (circle.shouldDisappear()) {
                         circles.remove(i);
@@ -158,36 +204,45 @@ public class App extends PApplet {
             }
 
         } else {
-            stage = 2;
+            stage = 3;
         }
 
-        if (frameCount % 90 == 0) {
+        if (frameCount % 30 == 0) {
             squareMaker();
             if (hardMode && frameCount % 90 == 0) {
                 circleMaker();
+
             }
         }
     }
 
+    // Shows the game over screen with your score
     public void endScreen() {
-        background(255);
-        fill(0);
+        background(0);
         textSize(40);
         textAlign(CENTER, CENTER);
+        fill(255,0,0);
         text("Game Over", width / 2, height / 2 - 100);
         text("Final Score: " + score, width / 2, height / 2);
+        if (score == highScore) {
+            textSize(40);
+            fill(0,255,0);
+            text("YOU ROCK! YOU GOT A NEW HIGH SCORE!! ", width / 2, TOP + 100);
+
+        }
+
         text("High Score: " + highScore, width / 2, height / 2 + 50);
         text("Click to restart", width / 2, height / 2 + 100);
     }
 
+    // Displays my rectangle
     public void rectangle() {
-        if (stage == 1) {
+        if (stage == 2) {
             gameField.display();
         }
     }
 
-
-    
+    // Makes new squares appear in random spots
     public void squareMaker() {
         float fieldX = (width - 625) / 2;
         float fieldY = (height - 625) / 2;
@@ -210,26 +265,21 @@ public class App extends PApplet {
 
                 // shrinking square
             } else if (chance < 0.4f) {
-                System.out.println("test");
                 newSquare.makeShrinkingSquare();
 
             } else if (chance < 0.6f) {
-                System.out.println("test1");
                 newSquare.makeGoldenSquare();
             }
         }
         squares.add(newSquare);
     }
 
-
-
-
+    // Makes circles drop from the top of the screen and where the circle can go in
+    // the rectangle
     public void circleMaker() {
-        // where the circle can go in the rectangle
         float fieldX = (width - 625) / 2;
         float fieldWidth = 620;
 
-        //
         float randomX = random(fieldX + 25, fieldX + fieldWidth - 25);
         float startY = (height - 625) / 2;
 
@@ -237,8 +287,7 @@ public class App extends PApplet {
         circles.add(newCircle);
     }
 
-
-
+    // Checks if you clicked any squares
     public void checkSquares() {
         for (int i = 0; i < squares.size(); i++) {
             Square currentSquare = squares.get(i);
@@ -269,17 +318,20 @@ public class App extends PApplet {
         }
     }
 
+    // Checks if you clicked any circles in hard mode
     public void checkCircles() {
         for (int i = 0; i < circles.size(); i++) {
             Circle currentCircle = circles.get(i);
             if (currentCircle.circleFound(mouseX, mouseY)) {
                 score = score + currentCircle.getPoints();
+                circles.remove(i);
+
             }
-            circles.remove(i);
+
         }
     }
-    
 
+    // Handles all mouse clicks for buttons and game objects
     public void mousePressed() {
         if (stage == 0) {
             if (mouseX >= 200 && mouseX <= 350 && mouseY >= 400 && mouseY <= 475) {
@@ -295,7 +347,7 @@ public class App extends PApplet {
 
                 // pushing buttons to start game
             }
-        } else if (stage == 3) {
+        } else if (stage == 4) {
             resetGame();
         } else {
             checkSquares();
@@ -303,7 +355,17 @@ public class App extends PApplet {
         }
     }
 
-  
+    public void keyPressed() {
+        if (stage == 1) {
+            if (key == ' ') {
+                stage = 2;
+                startGame();
+            }
+        }
+
+    }
+
+    // Puts everything back to the start when you want to play again
 
     public void resetGame() {
         stage = 0;
@@ -319,6 +381,7 @@ public class App extends PApplet {
         score++;
     }
 
+    // Gets the highest score from the file
     public void readHighScore() {
         try (Scanner scanner = new Scanner(Paths.get("Highscore.txt"))) {
             if (scanner.hasNextLine()) {
@@ -329,10 +392,12 @@ public class App extends PApplet {
         }
     }
 
+    // Saves your score if you beat the high score
+
     public void saveHighScore() {
         if (score <= highScore) {
             System.out.println("No new high score to save.");
-            stage = 3;
+            stage = 4;
             return;
         }
         if (score > highScore) {
@@ -348,7 +413,21 @@ public class App extends PApplet {
             System.out.println("FileNotFoundException: Unable to create or write to file at " + filePath);
         }
 
-        stage = 3;
+        stage = 4;
+    }
+
+    // circle lives removing
+    // Losing a life for circle
+    public void circleLives(float circleY) {
+        if (circleY >= 800) {
+            lives--;
+
+            if (lives <= 0) {
+                stage = 3;
+            }
+
+        }
+
     }
 
 }

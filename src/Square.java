@@ -1,20 +1,25 @@
-import processing.core.PApplet;
+import processing.core.PApplet; 
+
+//square class 
+//Sets size of the different squares 
+//where squares can and can't go 
+//if you click a square you lose or gain points 
 
 public class Square {
 
     private float x;
     private float y;
-
     private float size;
     private PApplet canvas;
     private int color;
+
     private boolean isShrinking = false;
     private int points = 1;
     private float createTime;
-
     private boolean isGolden = false;
     private boolean isBlack = false;
 
+    // creating a square, size, and time, color
     public Square(float xPos, float yPos, PApplet S) {
         x = xPos;
         y = yPos;
@@ -28,6 +33,7 @@ public class Square {
 
     }
 
+    // displaying the square and the shrinking square and how it shrinks
     public void display() {
         canvas.fill(color);
         canvas.rect(x, y, size, size);
@@ -38,6 +44,7 @@ public class Square {
 
     }
 
+    // makes the square disappear after a certain time
     public boolean shouldDisappear() {
         float currentTime = canvas.millis();
         float lifetime = (currentTime - createTime) / 1000.0f;
@@ -55,10 +62,12 @@ public class Square {
         return false;
     }
 
+    // if the MOUSE is inside the square then it's true
     public boolean squareFound(int mouseX, int mouseY) {
         return (mouseX >= x && mouseX <= x + size && mouseY >= y && mouseY <= y + size);
     }
 
+    // how likely a black square
     public void howlikely(float howlikely) {
         if (canvas.random(1) < howlikely) {
             makeBlackSquare();
@@ -67,6 +76,7 @@ public class Square {
         }
     }
 
+    // makes black square
     public void makeBlackSquare() {
 
         color = canvas.color(0, 0, 0);
@@ -75,12 +85,14 @@ public class Square {
 
     }
 
+    // makes golden square
     public void makeGoldenSquare() {
         color = canvas.color(255, 215, 0);
         points = 3;
         isGolden = true;
     }
 
+    // makes Shrinking square
     public void makeShrinkingSquare() {
         color = canvas.color(147, 112, 219);
         points = 10;
