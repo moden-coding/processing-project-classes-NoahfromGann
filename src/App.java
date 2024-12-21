@@ -89,6 +89,8 @@ public class App extends PApplet {
 
         textSize(40);
         if (hardMode == false) {
+
+            //(RGB Came From CHAT GPT I looked up retro game colors)
             fill(0, 191, 255); //blue
             text("Welcome to Easy Mode", width / 2, height / 2 - 220);
             textSize(30);

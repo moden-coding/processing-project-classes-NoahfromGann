@@ -11,7 +11,8 @@ public class Rectangle {
     private int color;
     private float width;
     private float height;
-
+    int edgethickness = 6;
+    
     // makes the rectangle position, size and color
     public Rectangle(float xPos, float yPos, float w, float h, PApplet S) {
         x = xPos;
@@ -27,7 +28,8 @@ public class Rectangle {
     public void display() {
 
         canvas.fill(color);
-        canvas.strokeWeight(4);
+        
+        canvas.strokeWeight(edgethickness);
         canvas.rect(x, y, width, height);
 
     }

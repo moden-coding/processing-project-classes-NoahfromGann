@@ -1,9 +1,10 @@
-import processing.core.PApplet; 
+import processing.core.PApplet;
 
 //square class 
 //Sets size of the different squares 
 //where squares can and can't go 
 //if you click a square you lose or gain points 
+// I used CHAT GPT a little in this method to help me with one of the creative factors for my black circle however using that I built off of it to make other methods so it shows my knowledge in curosity and how I apply it 
 
 public class Square {
 
@@ -39,6 +40,7 @@ public class Square {
         canvas.rect(x, y, size, size);
 
         if (isShrinking && size > 15) {
+
             size = size - 0.5f;
         }
 
