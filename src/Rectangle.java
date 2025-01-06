@@ -11,7 +11,7 @@ public class Rectangle {
     private int color;
     private float width;
     private float height;
-    int edgethickness = 6;
+    int edgethickness = 6; // didnt end up using 
     
     // makes the rectangle position, size and color
     public Rectangle(float xPos, float yPos, float w, float h, PApplet S) {
@@ -24,13 +24,18 @@ public class Rectangle {
 
     }
 
-    // displays square
+    // displays square should have said rectangle 
     public void display() {
 
         canvas.fill(color);
         
+        //dont use 
         canvas.strokeWeight(edgethickness);
+
         canvas.rect(x, y, width, height);
 
     }
 }
+
+
+

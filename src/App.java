@@ -21,6 +21,7 @@ import processing.core.*;
 
 //PApplet is an app that makes it easy to draw shapes make them move and use the mouse
 public class App extends PApplet {
+    
 
     // score and the game starting and creates an array for squares
     double startTimer = 0.0;
@@ -31,6 +32,7 @@ public class App extends PApplet {
     int score = 0;
     int highScore = 0;
 
+    //oops dont need this becasue i do everything with boolean hard mode true or false
     int gameMode = 1; // Game mode easy = 1 and Game Mode Hard = 2
 
     ArrayList<Square> squares = new ArrayList<Square>();
@@ -40,7 +42,7 @@ public class App extends PApplet {
     Rectangle easyButton;
     Rectangle hardButton;
     boolean hardMode = false;
-
+    
     public static void main(String[] args) {
         PApplet.main("App");
 
@@ -86,6 +88,7 @@ public class App extends PApplet {
         background(0);
         fill(255);
         textAlign(CENTER, CENTER);
+        
 
         textSize(40);
         if (hardMode == false) {
@@ -153,16 +156,21 @@ public class App extends PApplet {
 
     // This is where everything in my game is actually happening like my circles,
     // squares and timer
+    
 
     public void mainScreen() {
         gameField.display();
 
         double timer = (millis() - startTimer) / 1000.0;
 
+        //Shows me how timer and millis are different and how millis starts right when i click play or recent but timer starts at 0 and starts when my actual game starts 
+        // System.out.println("Timer = " + timer);
+        // System.out.println("Millis = " + millis());
+
         if (timer < 15.0) {
             background(0);
             rectangle();
-
+            
             // i is a number that you go over we are getting square zero to square size (i)
             // = num square in the array of squares called squares
             for (int i = 0; i < squares.size(); i++) {
@@ -292,8 +300,10 @@ public class App extends PApplet {
     // Checks if you clicked any squares
     public void checkSquares() {
         for (int i = 0; i < squares.size(); i++) {
-            Square currentSquare = squares.get(i);
-
+            //not possible for human to click in half a second so square.size() will never be 0
+            //in fact its value changes all the time depending on the time and how many squres you get rid of
+            Square currentSquare = squares.get(i); 
+            int j = squares.size();
             if (currentSquare.squareFound(mouseX, mouseY)) {
 
                 if (currentSquare.isBlack()) {
@@ -317,15 +327,19 @@ public class App extends PApplet {
                 }
                 squares.remove(i);
             }
+
+
         }
+
     }
 
     // Checks if you clicked any circles in hard mode
+    //when you click the mouse in stage 2 or 3 and not in 1 or 4 
     public void checkCircles() {
         for (int i = 0; i < circles.size(); i++) {
             Circle currentCircle = circles.get(i);
             if (currentCircle.circleFound(mouseX, mouseY)) {
-                score = score + currentCircle.getPoints();
+                score = score + currentCircle.getPoints(); //could havre just siad score = score + 3 but now I can change the amount of points clicking on a cricle gives you if i did a more advanced version of the game 
                 circles.remove(i);
 
             }
@@ -337,12 +351,12 @@ public class App extends PApplet {
     public void mousePressed() {
         if (stage == 0) {
             if (mouseX >= 200 && mouseX <= 350 && mouseY >= 400 && mouseY <= 475) {
-                gameMode = 1;
+                // gameMode = 1;
                 hardMode = false;
                 stage = 1;
                 startGame();
             } else if (mouseX >= 450 && mouseX <= 600 && mouseY >= 400 && mouseY <= 475) {
-                gameMode = 2;
+                // gameMode = 2;
                 hardMode = true;
                 stage = 1;
                 startGame();
@@ -361,6 +375,7 @@ public class App extends PApplet {
         if (stage == 1) {
             if (key == ' ') {
                 stage = 2;
+                //oops dont need this next line 
                 startGame();
             }
         }
@@ -427,9 +442,13 @@ public class App extends PApplet {
             if (lives <= 0) {
                 stage = 3;
             }
+            
 
         }
 
-    }
+    }   
+
 
 }
+
+

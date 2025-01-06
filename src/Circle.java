@@ -41,6 +41,7 @@ public class Circle {
 
     // if the MOUSE is in the circle it is true
     public boolean circleFound(int mouseX, int mouseY) {
+        //you have to click inside the box surrounidning the circle but my bet is you can't tell the difference and i couldnt figure how the mouse only clicks in a circle 
         return (mouseX >= x - size / 2 && mouseX <= x + size / 2 && mouseY >= y - size / 2 && mouseY <= y + size / 2);
     }
 
@@ -69,3 +70,6 @@ public class Circle {
         return points;
     }
 }
+
+
+
