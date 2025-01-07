@@ -296,14 +296,14 @@ public class App extends PApplet {
         Circle newCircle = new Circle(randomX, startY, this);
         circles.add(newCircle);
     }
-
+ 
     // Checks if you clicked any squares
     public void checkSquares() {
         for (int i = 0; i < squares.size(); i++) {
             //not possible for human to click in half a second so square.size() will never be 0
             //in fact its value changes all the time depending on the time and how many squres you get rid of
             Square currentSquare = squares.get(i); 
-            int j = squares.size();
+            // int j = squares.size();
             if (currentSquare.squareFound(mouseX, mouseY)) {
 
                 if (currentSquare.isBlack()) {
